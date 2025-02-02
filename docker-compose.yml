@@ -1,0 +1,40 @@
+services:
+  dev:
+    build: .
+    ports:
+      - "3000:3000"
+    working_dir: /app
+    env_file: .env
+    command: "npm start"
+    volumes:
+      - /app/node_modules/
+    depends_on:
+      mongo:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+  mongo:
+    attach: false
+    image: mongo:7.0.0-rc8-jammy
+    restart: always
+    command: [ --replSet, my-replica-set, --bind_ip_all ]
+    ports:
+      - "27017:27017"
+    healthcheck:
+      test: test $$(mongosh --quiet --eval "try {rs.initiate({_id:'my-replica-set',members:[{_id:0,host:\"mongo:27017\"}]})} catch(e) {rs.status().ok}") -eq 1
+      interval: 10s
+      retries: 3
+      start_period: 20s
+  rabbitmq:
+    attach: false
+    build:
+      dockerfile: rabbitmq-Dockerfile
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    healthcheck:
+      test: rabbitmq-diagnostics ping
+      interval: 10s
+      retries: 3
+      start_period: 20s
