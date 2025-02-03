@@ -10,7 +10,7 @@ export async function iconikCustomActionUseCase(payload: IconikCustomActionPaylo
   const { data: iconikAsset } = await iconikClient.get(`/assets/v1/assets/${assetId}`)
 
   const proxiesResponse = await iconikClient.get(
-    `/assets/v1/assets/${assetId}/versions/${iconikAsset.versions[0].id}/proxies/`,
+    `/files/v1/assets/${assetId}/versions/${iconikAsset.versions[0].id}/proxies/`,
     { params: { per_page: 1, generate_signed_url: true, content_disposition: 'attachment' } },
   )
 
@@ -18,8 +18,8 @@ export async function iconikCustomActionUseCase(payload: IconikCustomActionPaylo
 
   const { data: frameIoAsset } = await frameIoClient.post(`/assets/${FRAME_IO_ROOT_ASSET_ID}/children`, {
       name: iconikAsset.title,
-      type: 'FILE',
-      filesize: proxy.size,
+      type: 'file',
+      filesize: proxy.size ?? undefined,
       source: {
         url: proxy.url
       }
