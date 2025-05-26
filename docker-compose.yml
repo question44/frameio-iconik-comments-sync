@@ -3,16 +3,18 @@ services:
     build: .
     ports:
       - "3000:3000"
+      - "9229:9229"
     working_dir: /app
     env_file: .env
-    command: "npm start"
+    command: "sleep 1000000"
     depends_on:
       mongo:
         condition: service_healthy
       rabbitmq:
         condition: service_healthy
+    volumes:
+      - ./src:/app/src
   mongo:
-    attach: false
     image: mongo:7.0.0-rc8-jammy
     restart: always
     command: [ --replSet, my-replica-set, --bind_ip_all ]
@@ -24,7 +26,6 @@ services:
       retries: 3
       start_period: 20s
   rabbitmq:
-    attach: false
     image: rabbitmq
     restart: always
     ports:

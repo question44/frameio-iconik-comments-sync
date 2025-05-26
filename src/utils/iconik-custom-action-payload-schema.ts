@@ -1,10 +1,4 @@
-import {
-  array,
-  date,
-  InferType,
-  object,
-  string,
-} from 'yup'
+import { type InferType, array, date, object, string } from 'yup'
 
 export const iconikCustomActionPayloadSchema = object({
   user_id: string().uuid().required(),
@@ -18,4 +12,6 @@ export const iconikCustomActionPayloadSchema = object({
   auth_token: string().strip(),
 }).json()
 
-export type IconikCustomActionPayload = InferType<typeof iconikCustomActionPayloadSchema>
+export type IconikCustomActionPayload = InferType<
+  typeof iconikCustomActionPayloadSchema
+>
