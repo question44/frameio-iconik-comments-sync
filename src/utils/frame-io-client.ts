@@ -1,13 +1,16 @@
 import axios from 'axios'
 import { FRAME_IO_ACCESS_TOKEN } from 'src/config/env-vars'
 import { boolean, date, object, string } from 'yup'
+import { withRateLimitInterceptor } from './retry-interceptor.js'
 
-export const frameIoClient = axios.create({
-  baseURL: 'https://api.frame.io/v2/',
-  headers: {
-    Authorization: `Bearer ${FRAME_IO_ACCESS_TOKEN}`,
-  },
-})
+export const frameIoClient = withRateLimitInterceptor(
+  axios.create({
+    baseURL: 'https://api.frame.io/v2/',
+    headers: {
+      Authorization: `Bearer ${FRAME_IO_ACCESS_TOKEN}`,
+    },
+  }),
+)
 
 export const frameIoApi = {
   comments: {

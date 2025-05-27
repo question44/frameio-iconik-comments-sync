@@ -1,14 +1,17 @@
 import axios from 'axios'
 import { ICONIK_APP_ID, ICONIK_AUTH_TOKEN } from 'src/config/env-vars'
 import { object, string } from 'yup'
+import { withRateLimitInterceptor } from './retry-interceptor.js'
 
-export const iconikClient = axios.create({
-  baseURL: 'https://app.iconik.io/API/',
-  headers: {
-    'App-Id': ICONIK_APP_ID,
-    'Auth-Token': ICONIK_AUTH_TOKEN,
-  },
-})
+export const iconikClient = withRateLimitInterceptor(
+  axios.create({
+    baseURL: 'https://app.iconik.io/API/',
+    headers: {
+      'App-Id': ICONIK_APP_ID,
+      'Auth-Token': ICONIK_AUTH_TOKEN,
+    },
+  }),
+)
 
 export const iconikApi = {
   comments: {
