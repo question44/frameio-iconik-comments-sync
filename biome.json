@@ -6,5 +6,12 @@
 			"indentStyle": "space",
 			"indentWidth": 2
 		}
+	},
+	"linter": {
+		"rules": {
+			"correctness": {
+				"noUnusedImports": "error"
+			}
+		}
 	}
 }
